@@ -1,0 +1,24 @@
+{
+  "name": "safe-space-api",
+  "version": "1.0.0",
+  "description": "api for safe-space app",
+  "keywords": [
+    "api",
+    "safe-space"
+  ],
+  "license": "ISC",
+  "author": "Egor Busygin",
+  "type": "module",
+  "main": "app.js",
+  "scripts": {
+    "test": "test"
+  },
+  "devDependencies": {
+    "@types/express": "^5.0.6",
+    "@types/node": "^26.2.0",
+    "nodemon": "^3.1.14"
+  },
+  "dependencies": {
+    "express": "^5.2.1"
+  }
+}

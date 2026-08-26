@@ -1,6 +1,9 @@
 import { Logger, type ILogObj } from 'tslog';
+import type { ILog } from './logger.types.js';
+import { injectable } from 'inversify';
 
-export class Log {
+@injectable()
+export class Log implements ILog {
   logger: Logger<ILogObj>;
   loggerTemplate: string =
     '{{yyyy}}-{{mm}}-{{dd}} {{hh}}:{{MM}}:{{ss}} {{logLevelName}}: ';

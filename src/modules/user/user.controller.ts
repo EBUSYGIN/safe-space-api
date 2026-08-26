@@ -1,6 +1,7 @@
 import { type Response, type Request, type NextFunction } from 'express';
 import { BaseController } from '../../common/base-controller/base.controller.js';
-import type { Log } from '../../common/logger.js';
+import type { Log } from '../../common/logger/logger.js';
+import { HttpError } from '../../common/errors/http-error.js';
 
 export class UserController extends BaseController {
   constructor(logger: Log) {
@@ -24,6 +25,13 @@ export class UserController extends BaseController {
   }
 
   register(req: Request, res: Response, next: NextFunction) {
-    return res.status(200).json({ message: 'registered' });
+    // return res.status(200).json({ message: 'registered' });
+    next(
+      new HttpError(
+        404,
+        'Ошибка регистрации повторите позже',
+        'UserController',
+      ),
+    );
   }
 }

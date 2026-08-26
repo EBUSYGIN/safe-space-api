@@ -1,5 +1,5 @@
 import { type Response, Router } from 'express';
-import type { Log } from '../logger.js';
+import type { Log } from '../logger/logger.js';
 import type { IRoute } from './route.interface.js';
 export declare abstract class BaseController {
     protected logger: Log;

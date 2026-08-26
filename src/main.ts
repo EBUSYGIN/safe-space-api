@@ -1,6 +1,6 @@
 import { Container, ContainerModule } from 'inversify';
 import { App } from './app.js';
-import { ExceptionFilter } from './common/errors/exception-filter.js';
+import { ExceptionFilter } from './common/errors/exception.filter.js';
 import type { IExceptionFilter } from './common/errors/exception.filter.types.js';
 import { Log } from './common/logger/logger.js';
 import type { ILog } from './common/logger/logger.types.js';

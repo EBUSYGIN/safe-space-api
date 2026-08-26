@@ -1,13 +1,13 @@
 import type { NextFunction, Request, Response } from 'express';
-import type { Log } from '../logger/logger.js';
-import type { IExceptionFilter } from './exception.filter.interface.js';
+import { inject, injectable } from 'inversify';
+import { DITypes } from '../../DI.types.js';
+import type { ILog } from '../logger/logger.types.js';
+import type { IExceptionFilter } from './exception.filter.types.js';
 import { HttpError } from './http-error.js';
 
+@injectable()
 export class ExceptionFilter implements IExceptionFilter {
-  logger: Log;
-  constructor(logger: Log) {
-    this.logger = logger;
-  }
+  constructor(@inject(DITypes.ILog) private logger: ILog) {}
 
   catch(
     err: Error | HttpError,

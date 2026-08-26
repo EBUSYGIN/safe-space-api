@@ -1,10 +1,10 @@
 import { type Response, Router } from 'express';
-import type { Log } from '../logger/logger.js';
-import type { IRoute } from './route.interface.js';
+import type { IRoute } from './route.types.js';
+import type { ILog } from '../logger/logger.types.js';
 export declare abstract class BaseController {
-    protected logger: Log;
+    protected logger: ILog;
     private readonly _router;
-    constructor(logger: Log);
+    constructor(logger: ILog);
     get router(): Router;
     sendError<T>(res: Response, code: number, error: T): void;
     sendSuccess<T>(res: Response, code: number, info: T): void;

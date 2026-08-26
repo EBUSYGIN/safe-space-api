@@ -1,10 +1,14 @@
-import { type Response, type Request, type NextFunction } from 'express';
+import { type NextFunction, type Request, type Response } from 'express';
+import { inject, injectable } from 'inversify';
 import { BaseController } from '../../common/base-controller/base.controller.js';
-import type { Log } from '../../common/logger/logger.js';
 import { HttpError } from '../../common/errors/http-error.js';
+import type { ILog } from '../../common/logger/logger.types.js';
+import { DITypes } from '../../DI.types.js';
+import type { IUserController } from './user.controller.types.js';
 
-export class UserController extends BaseController {
-  constructor(logger: Log) {
+@injectable()
+export class UserController extends BaseController implements IUserController {
+  constructor(@inject(DITypes.ILog) logger: ILog) {
     super(logger);
     this.bindRoutes([
       {

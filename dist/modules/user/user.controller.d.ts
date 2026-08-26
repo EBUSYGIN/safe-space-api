@@ -1,8 +1,8 @@
 import { type Response, type Request, type NextFunction } from 'express';
 import { BaseController } from '../../common/base-controller/base.controller.js';
-import type { Log } from '../../common/logger/logger.js';
+import type { ILog } from '../../common/logger/logger.types.js';
 export declare class UserController extends BaseController {
-    constructor(logger: Log);
+    constructor(logger: ILog);
     login(req: Request, res: Response, next: NextFunction): Response<any, Record<string, any>>;
     register(req: Request, res: Response, next: NextFunction): void;
 }

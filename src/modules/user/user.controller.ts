@@ -6,6 +6,9 @@ import type { ILog } from '../../common/logger/logger.types.js';
 import { DITypes } from '../../DI.types.js';
 import type { IUserController } from './user.controller.types.js';
 
+class User {}
+const users = [];
+
 @injectable()
 export class UserController extends BaseController implements IUserController {
   constructor(@inject(DITypes.ILog) logger: ILog) {
@@ -24,18 +27,13 @@ export class UserController extends BaseController implements IUserController {
     ]);
   }
 
-  login(req: Request, res: Response, next: NextFunction) {
+  login(_req: Request, res: Response, _next: NextFunction) {
+    users.push(new User());
     return res.status(200).json({ message: 'logged in' });
   }
 
-  register(req: Request, res: Response, next: NextFunction) {
+  register(_req: Request, _res: Response, next: NextFunction) {
     // return res.status(200).json({ message: 'registered' });
-    next(
-      new HttpError(
-        404,
-        'Ошибка регистрации повторите позже',
-        'UserController',
-      ),
-    );
+    next(new HttpError(404, 'Ошибка регистрации повторите позже', 'UserController'));
   }
 }

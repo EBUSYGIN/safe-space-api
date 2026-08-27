@@ -9,16 +9,9 @@ import { HttpError } from './http-error.js';
 export class ExceptionFilter implements IExceptionFilter {
   constructor(@inject(DITypes.ILog) private logger: ILog) {}
 
-  catch(
-    err: Error | HttpError,
-    request: Request,
-    res: Response,
-    next: NextFunction,
-  ) {
+  catch(err: Error | HttpError, _request: Request, res: Response, _next: NextFunction) {
     if (err instanceof HttpError) {
-      this.logger.error(
-        `Ошибка ${err.statusCode} : ${err.message}, ${err?.context}`,
-      );
+      this.logger.error(`Ошибка ${err.statusCode} : ${err.message}, ${err?.context}`);
       return res.status(err.statusCode).json({ error: err.message });
     } else {
       this.logger.error(`Ошибка ${err.message} `);

@@ -1,7 +1,7 @@
 import { type Response, Router } from 'express';
-import type { IRoute } from './route.types.js';
-import type { ILog } from '../logger/logger.types.js';
 import { injectable } from 'inversify';
+import type { ILog } from '../logger/logger.types.js';
+import type { IRoute } from './route.types.js';
 
 @injectable()
 export abstract class BaseController {
@@ -26,7 +26,10 @@ export abstract class BaseController {
   protected bindRoutes(routes: IRoute[]) {
     for (const route of routes) {
       this.logger.info(`[${route.method}] ${route.path}`);
-      this._router[route.method](route.path, route.function.bind(this));
+      const handler = route.function.bind(this);
+      const middlewares = route.middlewares?.map((m) => m.execute.bind(m));
+      const pipeline = middlewares ? [...middlewares, handler] : handler;
+      this._router[route.method](route.path, pipeline);
     }
   }
 }

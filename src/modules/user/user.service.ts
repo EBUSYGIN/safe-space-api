@@ -1,4 +1,5 @@
 import { inject, injectable } from 'inversify';
+import jwt from 'jsonwebtoken';
 import { DITypes } from '../../DI.types.js';
 import type { IConfigService } from '../../common/config/config.service.types.js';
 import type { UserLoginDto, UserRegisterDto } from './dto/user.dto.js';
@@ -36,5 +37,30 @@ export class UserService implements IUserService {
 
     const { password: _password, ...cleanUser } = existingUser;
     return cleanUser;
+  }
+
+  signToken(email: string, secret: string) {
+    return new Promise<string>((resolve, reject) => {
+      jwt.sign(
+        {
+          email,
+          iat: Math.floor(Date.now() / 1000),
+        },
+        secret,
+        {
+          algorithm: 'HS256',
+        },
+        (err, token) => {
+          if (err) reject(err);
+          resolve(token as string);
+        },
+      );
+    });
+  }
+
+  async getUserInfo(email: string) {
+    const foundUser = await this.userRepository.findUserByEmail(email);
+    if (!foundUser) return null;
+    return foundUser;
   }
 }

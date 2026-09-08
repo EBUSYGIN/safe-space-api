@@ -8,12 +8,12 @@ import type { IExceptionFilter } from './common/errors/exception.filter.types.js
 import { Log } from './common/logger/logger.js';
 import type { ILog } from './common/logger/logger.types.js';
 import { DITypes } from './DI.types.js';
-import { UserController } from './modules/user/user.controller.js';
-import type { IUserController } from './modules/user/user.controller.types.js';
-import { UserRepository } from './modules/user/user.repository.js';
-import type { IUserRepository } from './modules/user/user.repository.types.js';
-import { UserService } from './modules/user/user.service.js';
-import type { IUserService } from './modules/user/user.service.types.js';
+import { UserController } from './modules/user/controller/user.controller.js';
+import type { IUserController } from './modules/user/controller/user.controller.types.js';
+import { UserRepository } from './modules/user/repository/user.repository.js';
+import type { IUserRepository } from './modules/user/repository/user.repository.types.js';
+import { UserService } from './modules/user/service/user.service.js';
+import type { IUserService } from './modules/user/service/user.service.types.js';
 
 export const appBindings = new ContainerModule((options) => {
   options.bind<App>(DITypes.App).to(App);
@@ -26,13 +26,14 @@ export const appBindings = new ContainerModule((options) => {
   options.bind<IUserRepository>(DITypes.IUserRepository).to(UserRepository);
 });
 
-async function bootstrap() {
+export async function bootstrap() {
   //Creation of container to put dependencies
   //Binding of class to its symbol in the container
   const appContainer = new Container();
   appContainer.load(appBindings);
   const app = appContainer.get<App>(DITypes.App);
   await app.init();
+  return { app, appContainer };
 }
 
-await bootstrap();
+export const boot = bootstrap();

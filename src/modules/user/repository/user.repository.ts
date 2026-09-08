@@ -1,7 +1,7 @@
 import { inject } from 'inversify';
-import type { DatabaseService } from '../../common/database/database.service.js';
-import { DITypes } from '../../DI.types.js';
-import type { User } from './entity/user.entity.js';
+import type { DatabaseService } from '../../../common/database/database.service.js';
+import { DITypes } from '../../../DI.types.js';
+import type { User } from '../entity/user.entity.js';
 import type { IUserRepository } from './user.repository.types.js';
 
 export class UserRepository implements IUserRepository {

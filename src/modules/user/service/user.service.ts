@@ -1,10 +1,10 @@
 import { inject, injectable } from 'inversify';
 import jwt from 'jsonwebtoken';
-import { DITypes } from '../../DI.types.js';
-import type { IConfigService } from '../../common/config/config.service.types.js';
-import type { UserLoginDto, UserRegisterDto } from './dto/user.dto.js';
-import { User } from './entity/user.entity.js';
-import type { IUserRepository } from './user.repository.types.js';
+import { DITypes } from '../../../DI.types.js';
+import type { IConfigService } from '../../../common/config/config.service.types.js';
+import type { UserLoginDto, UserRegisterDto } from '../dto/user.dto.js';
+import { User } from '../entity/user.entity.js';
+import type { IUserRepository } from '../repository/user.repository.types.js';
 import type { IUserService } from './user.service.types.js';
 
 @injectable()
@@ -60,7 +60,6 @@ export class UserService implements IUserService {
 
   async getUserInfo(email: string) {
     const foundUser = await this.userRepository.findUserByEmail(email);
-    if (!foundUser) return null;
     return foundUser;
   }
 }

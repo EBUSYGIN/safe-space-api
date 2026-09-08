@@ -1,15 +1,15 @@
 import { type NextFunction, type Request, type Response } from 'express';
 import { inject, injectable } from 'inversify';
-import { BaseController } from '../../common/base-controller/base.controller.js';
-import type { IConfigService } from '../../common/config/config.service.types.js';
-import { HttpError } from '../../common/errors/http-error.js';
-import type { ILog } from '../../common/logger/logger.types.js';
-import { AuthMiddleware } from '../../common/middleware/auth.middleware.js';
-import { ValidateMiddleware } from '../../common/middleware/validate.middleware.js';
-import { DITypes } from '../../DI.types.js';
-import { UserLoginDto, UserRegisterDto } from './dto/user.dto.js';
+import { BaseController } from '../../../common/base-controller/base.controller.js';
+import type { IConfigService } from '../../../common/config/config.service.types.js';
+import { HttpError } from '../../../common/errors/http-error.js';
+import type { ILog } from '../../../common/logger/logger.types.js';
+import { AuthMiddleware } from '../../../common/middleware/auth.middleware.js';
+import { ValidateMiddleware } from '../../../common/middleware/validate.middleware.js';
+import { DITypes } from '../../../DI.types.js';
+import { UserLoginDto, UserRegisterDto } from '../dto/user.dto.js';
+import type { IUserService } from '../service/user.service.types.js';
 import type { IUserController } from './user.controller.types.js';
-import type { IUserService } from './user.service.types.js';
 
 @injectable()
 export class UserController extends BaseController implements IUserController {

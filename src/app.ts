@@ -7,7 +7,7 @@ import type { IConfigService } from './common/config/config.service.types.js';
 import type { DatabaseService } from './common/database/database.service.js';
 import type { IExceptionFilter } from './common/errors/exception.filter.types.js';
 import type { ILog } from './common/logger/logger.types.js';
-import type { UserController } from './modules/user/user.controller.js';
+import type { UserController } from './modules/user/controller/user.controller.js';
 
 @injectable()
 export class App {
@@ -45,5 +45,9 @@ export class App {
     await this.databaseService.connect();
     this.server = this.app.listen(this.port);
     this.logger.info(`Server started on http://localhost:${this.port}`);
+  }
+
+  close() {
+    this.server.close();
   }
 }

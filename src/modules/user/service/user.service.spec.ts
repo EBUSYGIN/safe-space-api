@@ -1,5 +1,6 @@
-import { beforeAll, describe, expect, it, jest } from '@jest/globals';
 import { Container } from 'inversify';
+import type { Mocked } from 'vitest';
+import { beforeAll, describe, expect, it, vi } from 'vitest';
 import type { IConfigService } from '../../../common/config/config.service.types.js';
 import { DITypes } from '../../../DI.types.js';
 import { User } from '../entity/user.entity.js';
@@ -7,14 +8,14 @@ import type { IUserRepository } from '../repository/user.repository.types.js';
 import { UserService } from './user.service.js';
 import type { IUserService, UserWithoutPassword } from './user.service.types.js';
 
-const ConfigServiceMock: jest.Mocked<IConfigService> = {
-  get: jest.fn(),
+const ConfigServiceMock: Mocked<IConfigService> = {
+  get: vi.fn(),
 };
 
-const UserRepositoryMock: jest.Mocked<IUserRepository> = {
-  createUser: jest.fn(),
-  findUserByEmail: jest.fn(),
-  findUserByEmailForAuth: jest.fn(),
+const UserRepositoryMock: Mocked<IUserRepository> = {
+  createUser: vi.fn(),
+  findUserByEmail: vi.fn(),
+  findUserByEmailForAuth: vi.fn(),
 };
 
 const container = new Container();
@@ -36,8 +37,8 @@ beforeAll(() => {
 
 describe('User Service', () => {
   it('createUser', async () => {
-    configService.get = jest.fn<(key: string) => string | null>().mockReturnValueOnce('10');
-    userRepository.createUser = jest
+    configService.get = vi.fn<(key: string) => string | null>().mockReturnValueOnce('10');
+    userRepository.createUser = vi
       .fn<IUserRepository['createUser']>()
       .mockImplementationOnce(async (user: User) => ({
         id: '1',
@@ -60,7 +61,7 @@ describe('User Service', () => {
     const user = new User('a@a.ru', 'Anna');
     await user.setPassword('1', 10);
 
-    userRepository.findUserByEmailForAuth = jest
+    userRepository.findUserByEmailForAuth = vi
       .fn<IUserRepository['findUserByEmailForAuth']>()
       .mockResolvedValueOnce({
         id: '1',

@@ -1,5 +1,6 @@
 import { type NextFunction, type Request, type Response } from 'express';
 import { inject, injectable } from 'inversify';
+import type { IAuthService } from '../../../common/auth/auth.service.types.js';
 import { BaseController } from '../../../common/base-controller/base.controller.js';
 import type { IConfigService } from '../../../common/config/config.service.types.js';
 import { HttpError } from '../../../common/errors/http-error.js';
@@ -17,6 +18,7 @@ export class UserController extends BaseController implements IUserController {
     @inject(DITypes.ILog) logger: ILog,
     @inject(DITypes.IUserService) private userService: IUserService,
     @inject(DITypes.IConfigService) private configService: IConfigService,
+    @inject(DITypes.IAuthService) private authService: IAuthService,
   ) {
     super(logger);
     this.bindRoutes([
@@ -52,11 +54,19 @@ export class UserController extends BaseController implements IUserController {
       return next(new HttpError(404, 'Ошибка авторизации пользователя', 'UserController'));
     }
 
-    const jwt = await this.userService.signToken(existingUser.email, secret);
+    const accessToken = await this.authService.createAccessToken({
+      sub: existingUser.id,
+      email: existingUser.email,
+    });
+
+    const refreshToken = await this.authService.createRefreshToken({
+      sub: existingUser.id,
+    });
 
     return this.sendSuccess(res, 200, {
       message: 'Пользователь успешно авторизован',
-      token: jwt,
+      accessToken,
+      refreshToken,
       user: existingUser,
     });
   }
@@ -72,9 +82,21 @@ export class UserController extends BaseController implements IUserController {
         ),
       );
     }
+
+    const accessToken = await this.authService.createAccessToken({
+      sub: newUser.id,
+      email: newUser.email,
+    });
+
+    const refreshToken = await this.authService.createRefreshToken({
+      sub: newUser.id,
+    });
+
     return this.sendSuccess(res, 201, {
       message: 'Пользователь успешно зарегистрирован',
       user: newUser,
+      accessToken,
+      refreshToken,
     });
   }
 

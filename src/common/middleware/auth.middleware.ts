@@ -23,7 +23,9 @@ export class AuthMiddleware implements IMiddleware {
     }
     jwt.verify(token, secret, (err, payload) => {
       if (err) {
-        return next();
+        return res.status(401).json({
+          message: 'Пользователь не авторизован',
+        });
       }
 
       if (typeof payload === 'object' && payload && 'email' in payload) {

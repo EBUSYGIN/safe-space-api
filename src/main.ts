@@ -1,5 +1,7 @@
 import { Container, ContainerModule } from 'inversify';
 import { App } from './app.js';
+import { AuthService } from './common/auth/auth.service.js';
+import type { IAuthService } from './common/auth/auth.service.types.js';
 import { ConfigService } from './common/config/config.service.js';
 import type { IConfigService } from './common/config/config.service.types.js';
 import { DatabaseService } from './common/database/database.service.js';
@@ -24,6 +26,7 @@ export const appBindings = new ContainerModule((options) => {
   options.bind<IConfigService>(DITypes.IConfigService).to(ConfigService).inSingletonScope();
   options.bind<DatabaseService>(DITypes.IDatabaseService).to(DatabaseService).inSingletonScope();
   options.bind<IUserRepository>(DITypes.IUserRepository).to(UserRepository);
+  options.bind<IAuthService>(DITypes.IAuthService).to(AuthService).inSingletonScope();
 });
 
 export async function bootstrap() {

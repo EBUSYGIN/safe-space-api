@@ -7,4 +7,5 @@ export const DITypes = {
   IConfigService: Symbol.for('IConfigService'),
   IDatabaseService: Symbol.for('IDatabaseService'),
   IUserRepository: Symbol.for('IUserRepository'),
+  IAuthService: Symbol.for('IAuthService'),
 };

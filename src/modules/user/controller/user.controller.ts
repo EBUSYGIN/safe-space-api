@@ -1,5 +1,6 @@
 import { type NextFunction, type Request, type Response } from 'express';
 import { inject, injectable } from 'inversify';
+import type { IAuthService } from '../../../common/auth/auth.service.types.js';
 import { BaseController } from '../../../common/base-controller/base.controller.js';
 import type { IConfigService } from '../../../common/config/config.service.types.js';
 import { HttpError } from '../../../common/errors/http-error.js';
@@ -17,6 +18,7 @@ export class UserController extends BaseController implements IUserController {
     @inject(DITypes.ILog) logger: ILog,
     @inject(DITypes.IUserService) private userService: IUserService,
     @inject(DITypes.IConfigService) private configService: IConfigService,
+    @inject(DITypes.IAuthService) private authService: IAuthService,
   ) {
     super(logger);
     this.bindRoutes([
@@ -36,7 +38,13 @@ export class UserController extends BaseController implements IUserController {
         path: '/info',
         method: 'get',
         function: this.getUserInfo,
-        middlewares: [new AuthMiddleware(this.configService)],
+        middlewares: [new AuthMiddleware(this.configService, this.authService, 'access')],
+      },
+      {
+        path: '/refresh',
+        method: 'get',
+        function: this.refresh,
+        middlewares: [new AuthMiddleware(this.configService, this.authService, 'refresh')],
       },
     ]);
   }
@@ -52,11 +60,20 @@ export class UserController extends BaseController implements IUserController {
       return next(new HttpError(404, 'Ошибка авторизации пользователя', 'UserController'));
     }
 
-    const jwt = await this.userService.signToken(existingUser.email, secret);
+    const accessToken = await this.authService.createAccessToken({
+      sub: existingUser.id,
+      email: existingUser.email,
+    });
+
+    const refreshToken = await this.authService.createRefreshToken({
+      sub: existingUser.id,
+      email: existingUser.email,
+    });
 
     return this.sendSuccess(res, 200, {
       message: 'Пользователь успешно авторизован',
-      token: jwt,
+      accessToken,
+      refreshToken,
       user: existingUser,
     });
   }
@@ -72,9 +89,22 @@ export class UserController extends BaseController implements IUserController {
         ),
       );
     }
+
+    const accessToken = await this.authService.createAccessToken({
+      sub: newUser.id,
+      email: newUser.email,
+    });
+
+    const refreshToken = await this.authService.createRefreshToken({
+      sub: newUser.id,
+      email: newUser.email,
+    });
+
     return this.sendSuccess(res, 201, {
       message: 'Пользователь успешно зарегистрирован',
       user: newUser,
+      accessToken,
+      refreshToken,
     });
   }
 
@@ -86,6 +116,24 @@ export class UserController extends BaseController implements IUserController {
     return this.sendSuccess(res, 200, {
       message: 'Информация о пользователе',
       user: userInfo,
+    });
+  }
+
+  async refresh({ user }: Request, res: Response, next: NextFunction) {
+    if (!user) {
+      return next(new HttpError(401, 'Пользователь не авторизован', 'UserController'));
+    }
+    const foundUser = await this.userService.getUserInfo(user);
+    if (!foundUser) {
+      return next(new HttpError(404, 'Пользователь не найден', 'UserController'));
+    }
+    const newAccessToken = await this.authService.createAccessToken({
+      sub: foundUser.id,
+      email: foundUser.email,
+    });
+    return this.sendSuccess(res, 200, {
+      message: 'Токен успешно обновлен',
+      accessToken: newAccessToken,
     });
   }
 }

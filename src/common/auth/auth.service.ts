@@ -31,6 +31,17 @@ export class AuthService implements IAuthService {
     );
   }
 
+  verifyToken(token: string, audience: string, secret: string): jwt.JwtPayload | null {
+    try {
+      const payload = jwt.verify(token, secret, { audience });
+      return payload as jwt.JwtPayload;
+    } catch (err) {
+      const message = err instanceof Error ? err.message : String(err);
+      this.loggerService.error(`[AuthService] Error verifying token: ${message}`);
+      return null;
+    }
+  }
+
   private signToken(
     payload: Record<string, unknown>,
     options: jwt.SignOptions,

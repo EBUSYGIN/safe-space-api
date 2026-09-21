@@ -1,10 +1,17 @@
 import type { NextFunction, Request, Response } from 'express';
-import jwt from 'jsonwebtoken';
+import type { IAuthService } from '../auth/auth.service.types.js';
 import type { IConfigService } from '../config/config.service.types.js';
 import type { IMiddleware } from './middleware.interface.js';
 
 export class AuthMiddleware implements IMiddleware {
-  constructor(private configService: IConfigService) {}
+  private tokenVerificationType: 'access' | 'refresh';
+  constructor(
+    private configService: IConfigService,
+    private authService: IAuthService,
+    type: 'access' | 'refresh' = 'access',
+  ) {
+    this.tokenVerificationType = type;
+  }
 
   execute(req: Request, res: Response, next: NextFunction) {
     const authHeader = req.headers.authorization;
@@ -21,19 +28,17 @@ export class AuthMiddleware implements IMiddleware {
     if (!secret) {
       return res.status(500).json({ message: 'Ошибка сервера' });
     }
-    jwt.verify(token, secret, (err, payload) => {
-      if (err) {
-        return res.status(401).json({
-          message: 'Пользователь не авторизован',
-        });
-      }
 
-      if (typeof payload === 'object' && payload && 'email' in payload) {
-        req.user = String(payload.email);
-        return next();
-      }
+    const result = this.authService.verifyToken(token, this.tokenVerificationType, secret);
+    if (!result) {
+      return res.status(401).json({ message: 'Пользователь не авторизован' });
+    }
 
-      return next();
-    });
+    if (typeof result.sub !== 'string' || typeof result.email !== 'string') {
+      return res.status(401).json({ message: 'Пользователь не авторизован' });
+    }
+
+    req.user = result.email;
+    next();
   }
 }

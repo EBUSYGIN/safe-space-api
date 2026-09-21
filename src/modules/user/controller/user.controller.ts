@@ -38,7 +38,13 @@ export class UserController extends BaseController implements IUserController {
         path: '/info',
         method: 'get',
         function: this.getUserInfo,
-        middlewares: [new AuthMiddleware(this.configService)],
+        middlewares: [new AuthMiddleware(this.configService, this.authService, 'access')],
+      },
+      {
+        path: '/refresh',
+        method: 'get',
+        function: this.refresh,
+        middlewares: [new AuthMiddleware(this.configService, this.authService, 'refresh')],
       },
     ]);
   }
@@ -61,6 +67,7 @@ export class UserController extends BaseController implements IUserController {
 
     const refreshToken = await this.authService.createRefreshToken({
       sub: existingUser.id,
+      email: existingUser.email,
     });
 
     return this.sendSuccess(res, 200, {
@@ -90,6 +97,7 @@ export class UserController extends BaseController implements IUserController {
 
     const refreshToken = await this.authService.createRefreshToken({
       sub: newUser.id,
+      email: newUser.email,
     });
 
     return this.sendSuccess(res, 201, {
@@ -108,6 +116,24 @@ export class UserController extends BaseController implements IUserController {
     return this.sendSuccess(res, 200, {
       message: 'Информация о пользователе',
       user: userInfo,
+    });
+  }
+
+  async refresh({ user }: Request, res: Response, next: NextFunction) {
+    if (!user) {
+      return next(new HttpError(401, 'Пользователь не авторизован', 'UserController'));
+    }
+    const foundUser = await this.userService.getUserInfo(user);
+    if (!foundUser) {
+      return next(new HttpError(404, 'Пользователь не найден', 'UserController'));
+    }
+    const newAccessToken = await this.authService.createAccessToken({
+      sub: foundUser.id,
+      email: foundUser.email,
+    });
+    return this.sendSuccess(res, 200, {
+      message: 'Токен успешно обновлен',
+      accessToken: newAccessToken,
     });
   }
 }

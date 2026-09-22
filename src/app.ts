@@ -7,6 +7,7 @@ import type { IConfigService } from './common/config/config.service.types.js';
 import type { DatabaseService } from './common/database/database.service.js';
 import type { IExceptionFilter } from './common/errors/exception.filter.types.js';
 import type { ILog } from './common/logger/logger.types.js';
+import type { INoteController } from './modules/note/controller/note.controller.types.js';
 import type { UserController } from './modules/user/controller/user.controller.js';
 
 @injectable()
@@ -18,6 +19,7 @@ export class App {
   constructor(
     @inject(DITypes.ILog) private logger: ILog,
     @inject(DITypes.IUserController) private userController: UserController,
+    @inject(DITypes.INoteController) private noteController: INoteController,
     @inject(DITypes.IExceptionFilter) private exceptionFilter: IExceptionFilter,
     @inject(DITypes.IConfigService) private configService: IConfigService,
     @inject(DITypes.IDatabaseService) private databaseService: DatabaseService,
@@ -28,6 +30,7 @@ export class App {
 
   useRoutes() {
     this.app.use('/user', this.userController.router);
+    this.app.use('/note', this.noteController.router);
   }
 
   useExceptionFilters() {

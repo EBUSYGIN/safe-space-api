@@ -10,6 +10,12 @@ import type { IExceptionFilter } from './common/errors/exception.filter.types.js
 import { Log } from './common/logger/logger.js';
 import type { ILog } from './common/logger/logger.types.js';
 import { DITypes } from './DI.types.js';
+import { NoteController } from './modules/note/controller/note.controller.js';
+import type { INoteController } from './modules/note/controller/note.controller.types.js';
+import { NoteRepository } from './modules/note/repository/note.repository.js';
+import type { INoteRepository } from './modules/note/repository/note.repository.types.js';
+import { NoteService } from './modules/note/service/note.service.js';
+import type { INoteService } from './modules/note/service/note.service.types.js';
 import { UserController } from './modules/user/controller/user.controller.js';
 import type { IUserController } from './modules/user/controller/user.controller.types.js';
 import { UserRepository } from './modules/user/repository/user.repository.js';
@@ -27,6 +33,9 @@ export const appBindings = new ContainerModule((options) => {
   options.bind<DatabaseService>(DITypes.IDatabaseService).to(DatabaseService).inSingletonScope();
   options.bind<IUserRepository>(DITypes.IUserRepository).to(UserRepository);
   options.bind<IAuthService>(DITypes.IAuthService).to(AuthService).inSingletonScope();
+  options.bind<INoteRepository>(DITypes.INoteRepository).to(NoteRepository).inSingletonScope();
+  options.bind<INoteService>(DITypes.INoteService).to(NoteService).inSingletonScope();
+  options.bind<INoteController>(DITypes.INoteController).to(NoteController).inSingletonScope();
 });
 
 export async function bootstrap() {

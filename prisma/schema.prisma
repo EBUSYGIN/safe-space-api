@@ -26,6 +26,7 @@ model UserModel {
 
 model NoteModel {
   id        String   @id @default(cuid())
+  tags      TagModel[]
   title     String
   content   String
   userId    String
@@ -34,4 +35,9 @@ model NoteModel {
   updatedAt DateTime @updatedAt
 }
 
-
+model TagModel {
+  id     String    @id @default(cuid())
+  name   String
+  noteId String
+  note   NoteModel @relation(fields: [noteId], references: [id], onDelete: Cascade)
+}

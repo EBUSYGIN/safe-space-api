@@ -22,4 +22,22 @@ export class NoteService implements INoteService {
     }
     return savedNote;
   }
+
+  async getAllNotes(userId: string) {
+    const notes = await this.noteRepository.getAllNotes(userId);
+    if (!notes) {
+      this.logger.error('[Note Service]: error in fetching notes');
+      return null;
+    }
+    return notes;
+  }
+
+  async getNoteById(noteId: string, userId: string) {
+    const note = await this.noteRepository.getNoteById(noteId, userId);
+    if (!note) {
+      this.logger.error('[Note Service]: error in fetching note');
+      return null;
+    }
+    return note;
+  }
 }

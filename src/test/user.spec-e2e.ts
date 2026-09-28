@@ -21,6 +21,12 @@ describe('User e2e', () => {
     expect(res.statusCode).toBe(422);
   });
 
+  it('login without body - error', async () => {
+    const res = await request(application.app).post('/user/login');
+
+    expect(res.statusCode).toBe(422);
+  });
+
   it('login - success', async () => {
     const res = await request(application.app).post('/user/login').send({
       email: 'a@gmail.com',

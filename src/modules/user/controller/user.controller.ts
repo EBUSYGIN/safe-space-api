@@ -108,22 +108,22 @@ export class UserController extends BaseController implements IUserController {
     });
   }
 
-  async getUserInfo({ user }: Request, res: Response, next: NextFunction) {
-    if (!user) {
+  async getUserInfo({ userId }: Request, res: Response, next: NextFunction) {
+    if (!userId) {
       return next(new HttpError(401, 'Пользователь не авторизован', 'UserController'));
     }
-    const userInfo = await this.userService.getUserInfo(user);
+    const userInfo = await this.userService.getUserInfo(userId);
     return this.sendSuccess(res, 200, {
       message: 'Информация о пользователе',
       user: userInfo,
     });
   }
 
-  async refresh({ user }: Request, res: Response, next: NextFunction) {
-    if (!user) {
+  async refresh({ userId }: Request, res: Response, next: NextFunction) {
+    if (!userId) {
       return next(new HttpError(401, 'Пользователь не авторизован', 'UserController'));
     }
-    const foundUser = await this.userService.getUserInfo(user);
+    const foundUser = await this.userService.getUserInfo(userId);
     if (!foundUser) {
       return next(new HttpError(404, 'Пользователь не найден', 'UserController'));
     }

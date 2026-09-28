@@ -35,6 +35,18 @@ export class UserRepository implements IUserRepository {
     return user;
   }
 
+  async findUserById(id: string) {
+    const user = await this.databaseService.client.userModel.findUnique({
+      where: {
+        id,
+      },
+      omit: {
+        password: true,
+      },
+    });
+    return user;
+  }
+
   async findUserByEmailForAuth(email: string) {
     const user = await this.databaseService.client.userModel.findUnique({
       where: {

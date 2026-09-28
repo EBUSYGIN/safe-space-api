@@ -38,8 +38,8 @@ export class UserService implements IUserService {
     return cleanUser;
   }
 
-  async getUserInfo(email: string) {
-    const foundUser = await this.userRepository.findUserByEmail(email);
+  async getUserInfo(id: string) {
+    const foundUser = await this.userRepository.findUserById(id);
     return foundUser;
   }
 }

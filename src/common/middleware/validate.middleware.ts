@@ -7,6 +7,10 @@ export class ValidateMiddleware implements IMiddleware {
   constructor(private classToValidate: ClassConstructor<object>) {}
 
   execute({ body }: Request, res: Response, next: NextFunction) {
+    if (!body) {
+      return res.status(422).send({ message: 'No data provided' });
+    }
+
     const instance = plainToClass(this.classToValidate, body);
     validate(instance).then((errors) => {
       if (errors.length > 0) {

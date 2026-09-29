@@ -34,11 +34,11 @@ export class AuthMiddleware implements IMiddleware {
       return res.status(401).json({ message: 'Пользователь не авторизован' });
     }
 
-    if (typeof result.sub !== 'string' || typeof result.email !== 'string') {
+    if (typeof result.sub !== 'string') {
       return res.status(401).json({ message: 'Пользователь не авторизован' });
     }
 
-    req.user = result.email;
+    req.userId = result.sub;
     next();
   }
 }

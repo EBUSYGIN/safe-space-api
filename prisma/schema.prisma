@@ -10,7 +10,7 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
+  provider = "sqlite"
   url      = env("DATABASE_URL")
 }
 
@@ -19,8 +19,25 @@ model UserModel {
   email     String   @unique
   password  String
   name      String
+  note NoteModel[]
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
 
+model NoteModel {
+  id        String   @id @default(cuid())
+  tags      TagModel[]
+  title     String
+  content   String
+  userId    String
+  user      UserModel @relation(fields: [userId], references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
 
+model TagModel {
+  id     String    @id @default(cuid())
+  name   String
+  noteId String
+  note   NoteModel @relation(fields: [noteId], references: [id], onDelete: Cascade)
+}

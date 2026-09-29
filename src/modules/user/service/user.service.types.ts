@@ -6,5 +6,5 @@ export type UserWithoutPassword = Omit<UserModel, 'password'>;
 export interface IUserService {
   createUser: (dto: UserRegisterDto) => Promise<UserWithoutPassword | null>;
   validateUser: (dto: UserLoginDto) => Promise<UserWithoutPassword | null>;
-  getUserInfo: (email: string) => Promise<UserWithoutPassword | null>;
+  getUserInfo: (id: string) => Promise<UserWithoutPassword | null>;
 }

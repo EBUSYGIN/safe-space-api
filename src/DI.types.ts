@@ -8,4 +8,7 @@ export const DITypes = {
   IDatabaseService: Symbol.for('IDatabaseService'),
   IUserRepository: Symbol.for('IUserRepository'),
   IAuthService: Symbol.for('IAuthService'),
+  INoteController: Symbol.for('INoteController'),
+  INoteService: Symbol.for('INoteService'),
+  INoteRepository: Symbol.for('INoteRepository'),
 };

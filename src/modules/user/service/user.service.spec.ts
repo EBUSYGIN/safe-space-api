@@ -15,6 +15,7 @@ const ConfigServiceMock: Mocked<IConfigService> = {
 const UserRepositoryMock: Mocked<IUserRepository> = {
   createUser: vi.fn(),
   findUserByEmail: vi.fn(),
+  findUserById: vi.fn(),
   findUserByEmailForAuth: vi.fn(),
 };
 

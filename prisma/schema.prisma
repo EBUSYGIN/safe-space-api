@@ -29,6 +29,7 @@ model NoteModel {
   tags      TagModel[]
   title     String
   content   String
+  date      DateTime
   userId    String
   user      UserModel @relation(fields: [userId], references: [id])
   createdAt DateTime @default(now())

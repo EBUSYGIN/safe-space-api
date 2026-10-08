@@ -14,7 +14,7 @@ export class NoteService implements INoteService {
   ) {}
 
   async createNote(noteDto: NoteDto, userId: string) {
-    const newNote = new Note(noteDto.content, noteDto.title, userId);
+    const newNote = new Note(noteDto.content, noteDto.title, new Date(noteDto.date), userId);
     const savedNote = await this.noteRepository.createNote(newNote);
     if (!savedNote) {
       this.logger.error('[Note Service]: error in creating note');

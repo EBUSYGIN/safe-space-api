@@ -13,6 +13,7 @@ export class NoteRepository implements INoteRepository {
       data: {
         content: note.content,
         title: note.title,
+        date: note.date,
         userId: note.userId,
       },
     });
